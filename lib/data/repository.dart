@@ -4,14 +4,13 @@ import 'package:todoapp/model/task.dart';
 
 class Repository {
   final GraphqlConfigs _point = GraphqlConfigs();
-  static const String _developer_id = 'Oyaks';
+  static const String _developerId = 'Oyaks';
 
   Future<List<Task>> getAllTask() async {
-    final response = await _point
-        .queryFunction(EndpointConfigs.getAllTask, {"developer_id": "Oyaks"});
-
+    final response = await _point.queryFunction(
+        EndpointConfigs.getAllTask, {"developer_id": _developerId});
     final result =
-        (response["tasks"] as List).map((e) => Task.fromJson(e)).toList();
+        (response["tasks"] as List).map((e) => Task.fromMap(e)).toList();
 
     return result;
   }
@@ -19,40 +18,35 @@ class Repository {
   Future<Task> getSingleTask({required String id}) async {
     final response = await _point.queryFunction(
         EndpointConfigs.getSingleTask, {"id": id, "developer_id": "Oyaks"});
-    return Task.fromJson(response['tasks_by_pk']);
+    return Task.fromMap(response['tasks_by_pk']);
   }
 
   Future<Task> insertTask(
       {required String title, required String description}) async {
     final response = await _point.mutateFunction(EndpointConfigs.insertTask, {
-      "developer_id": "UNIQUE ID FOR YOUR APP",
+      "developer_id": _developerId,
       "title": title,
       "description": description
     });
-    return Task.fromJson(response["insert_tasks_one"]);
+    return Task.fromMap(response["insert_tasks_one"]);
   }
 
-  Future<Task> updateTask(
-      {required String id,
-      required String title,
-      required String description}) async {
-    final response =
-        await _point.mutateFunction(EndpointConfigs.getSingleTask, {
-      "id": id,
+  Future<Task> updateTask({required Task task}) async {
+    final response = await _point.mutateFunction(EndpointConfigs.updateTask, {
+      "id": task.id,
       "payload": {
-        "isCompleted": false,
-        "title": title,
-        "description": description
+        "isCompleted": task.isCompleted,
+        "title": task.title,
+        "description": task.description
       }
     });
-    return Task.fromJson(response["update_tasks_by_pk"]);
+    return Task.fromMap(response["update_tasks_by_pk"]);
   }
 
   Future<Task> deleteTask({required String id}) async {
-    final response =
-        await _point.mutateFunction(EndpointConfigs.getSingleTask, {
+    final response = await _point.mutateFunction(EndpointConfigs.deleteTask, {
       "id": id,
     });
-    return Task.fromJson(response["delete_tasks_by_pk"]);
+    return Task.fromMap(response["delete_tasks_by_pk"]);
   }
 }

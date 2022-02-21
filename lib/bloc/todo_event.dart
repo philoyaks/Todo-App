@@ -9,8 +9,28 @@ abstract class TodoEvent extends Equatable {
 
 class TodoGetAllTaskEvent extends TodoEvent {}
 
-class TodoGetOnlyOneTaskEvent extends TodoEvent {}
+class TodoGetOnlyOneTaskEvent extends TodoEvent {
+  final Task task;
 
-class TodoUpdateTaskEvent extends TodoEvent {}
+  const TodoGetOnlyOneTaskEvent({required this.task});
+  @override
+  // TODO: implement props
+  List<Object> get props => [task];
+}
 
-class TodoDeleteTaskEvent extends TodoEvent {}
+class TodoUpdateTaskEvent extends TodoEvent {
+  final Task task;
+  const TodoUpdateTaskEvent({required this.task});
+}
+
+class TodoDeleteTaskEvent extends TodoEvent {
+  final String id;
+  const TodoDeleteTaskEvent({required this.id});
+}
+
+class TodoInsertTaskEvent extends TodoEvent {
+  final String title;
+  final String description;
+
+  const TodoInsertTaskEvent({required this.title, required this.description});
+}

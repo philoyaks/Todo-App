@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todoapp/bloc/todo_bloc.dart';
-import 'package:todoapp/data/repository.dart';
+import 'package:todoapp/constants/app_constants.dart';
 import 'package:todoapp/widgets/todo_list_tile.dart';
+
+import '../route.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -13,12 +15,19 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool check = true;
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, () {
+      context.read<TodoBloc>().add(TodoGetAllTaskEvent());
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     var _theme = Theme.of(context);
-    final bloc = BlocProvider.of<TodoBloc>(context);
-    Repository getIT = Repository();
+    final NavigationService _nav = locator<NavigationService>();
+    var _size = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
@@ -26,19 +35,60 @@ class _HomeScreenState extends State<HomeScreen> {
           'Todo List',
           style: _theme.textTheme.headline1,
         ),
+        automaticallyImplyLeading: false,
       ),
-      body: ListView(
-        children: [
-          TodoListTiles(
-            done: true,
-            message: 'You are welcom',
-            title: 'Bayo is good',
+      body: Container(
+        height: _size.height,
+        width: _size.width,
+        child: WillPopScope(
+          onWillPop: () async {
+            return false;
+          },
+          child: BlocBuilder<TodoBloc, TodoState>(
+            builder: (context, state) {
+              if (state is TodoLoadSucess) {
+                return SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  physics: const BouncingScrollPhysics(),
+                  child: Column(
+                    children: [
+                      Column(
+                        children: state.unCompletedTask
+                            .asMap()
+                            .map((i, e) => MapEntry(
+                                i,
+                                TodoListTiles(
+                                    task: e, tapped: () {}, number: i + 1)))
+                            .values
+                            .toList(),
+                      ),
+                      Column(
+                        children: state.completedTask
+                            .asMap()
+                            .map((i, e) => MapEntry(
+                                i,
+                                TodoListTiles(
+                                    task: e, tapped: () {}, number: i + 1)))
+                            .values
+                            .toList(),
+                      ),
+                    ],
+                  ),
+                );
+              } else if (state is TodoInitial) {
+                return emptyTodo(_theme);
+              } else {
+                return const Center(
+                    child: CircularProgressIndicator(
+                  color: kprimaryColor,
+                ));
+              }
+            },
           ),
-          ElevatedButton(onPressed: () async {}, child: const Text('sdfjfn'))
-        ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () => _nav.navigateTo(PageName.createTaskScreen),
         tooltip: 'Add Task',
         child: const Icon(Icons.add),
       ),

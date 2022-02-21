@@ -9,7 +9,9 @@ void setupLocator() {
 }
 
 class PageName {
-  static const String createOREditScreen = 'CreateOREditScreen';
+  static const String createTaskScreen = 'createTaskScreen';
+  static const String editTaskScreen = 'editTaskScreen';
+
   static const String homeScreen = 'Homescreen';
 }
 

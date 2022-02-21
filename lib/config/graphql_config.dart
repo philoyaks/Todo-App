@@ -22,8 +22,10 @@ class GraphqlConfigs {
   mutateFunction(String query, Map<String, Object> variables) async {
     ValueNotifier<GraphQLClient> _client = getClient();
 
-    QueryResult result = await _client.value
-        .mutate(MutationOptions(document: gql(query), variables: variables));
+    QueryResult result = await _client.value.mutate(MutationOptions(
+        document: gql(query),
+        variables: variables,
+        fetchPolicy: FetchPolicy.cacheAndNetwork));
 
     if (result.hasException) {
       print(result.exception);
@@ -41,8 +43,10 @@ class GraphqlConfigs {
   queryFunction(String query, Map<String, String> variables) async {
     ValueNotifier<GraphQLClient> _client = getClient();
 
-    QueryResult result = await _client.value
-        .query(QueryOptions(document: gql(query), variables: variables));
+    QueryResult result = await _client.value.query(QueryOptions(
+        document: gql(query),
+        variables: variables,
+        fetchPolicy: FetchPolicy.cacheAndNetwork));
 
     if (result.hasException) {
       print(result.exception);
@@ -52,65 +56,8 @@ class GraphqlConfigs {
         print(result.exception!.graphqlErrors[0].message.toString());
       }
     } else {
-      print(result.data);
-
       print("Task was successfully added");
       return result.data;
     }
   }
 }
-
-class GetData {
-  final GraphqlConfigs _point = GraphqlConfigs();
-
-  String query = """
-mutation InsertTask(\$description: String!, \$developer_id: String!, \$title: String!) {
-  insert_tasks_one(object: {title: \$title, developer_id: \$developer_id, description: \$description}) {
-    created_at
-    description
-    developer_id
-    id
-    isCompleted
-    title
-    updated_at
-  }
-}
-""";
-
-  // Future<void> getTask() async {
-  //   ValueNotifier<GraphQLClient> _client = _point.getClient();
-
-  //   QueryResult result = await _client.value.mutate(MutationOptions(
-  //       document: gql(query),
-  //       variables: {
-  //         "developer_id": "Oyaks",
-  //         "title": "dsn",
-  //         "description": "ndikagk"
-  //       }));
-
-  //   if (result.hasException) {
-  //     print(result.exception);
-  //     if (result.exception!.graphqlErrors.isEmpty) {
-  //       print("Internet is not found");
-  //     } else {
-  //       print(result.exception!.graphqlErrors[0].message.toString());
-  //     }
-  //   } else {
-  //     print(result.data);
-
-  //     print("Task was successfully added");
-  //   }
-  // }
-  Future<void> getTask() async {
-    _point.queryFunction(EndpointConfigs.getAllTask, {"developer_id": "Oyaks"});
-  }
-
-  Future<void> getSingleTask() async {
-    _point.queryFunction(EndpointConfigs.getAllTask, {
-      "id": "830a6e53-1395-4f71-b06d-593b0adf9248",
-      "developer_id": "Oyaks"
-    });
-  }
-}
-
-class RepoParams {}

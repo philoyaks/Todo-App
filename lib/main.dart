@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:todoapp/bloc/todo_bloc.dart';
 import 'package:todoapp/constants/app_theme.dart';
 import 'package:todoapp/pages/home_screen.dart';
 import 'package:todoapp/route.dart';
@@ -6,14 +9,17 @@ import 'package:device_preview/device_preview.dart';
 
 import 'constants/app_constants.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
-  // runApp(const MyApp());
+  await initHiveForFlutter();
 
-  DevicePreview(
-    enabled: true,
-    builder: (context) => const MyApp(),
-  );
+  runApp(const MyApp());
+
+  // DevicePreview(
+  //   enabled: true,
+  //   builder: (context) => const MyApp(),
+  // );
 }
 
 class MyApp extends StatelessWidget {
@@ -22,13 +28,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        useInheritedMediaQuery: true,
-        locale: DevicePreview.locale(context),
         title: 'Flutter Demo',
         theme: lightTheme,
         debugShowCheckedModeBanner: false,
         onGenerateRoute: generateRoute,
         navigatorKey: locator<NavigationService>().navigationKey,
-        home: const HomeScreen());
+        home: BlocProvider(
+          create: (context) => TodoBloc()..add(TodoGetAllTaskEvent()),
+          child: const HomeScreen(),
+        ));
   }
 }

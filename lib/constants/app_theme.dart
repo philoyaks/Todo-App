@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'app_constants.dart';
+
 ThemeData lightTheme = ThemeData(
     primaryColor: kprimaryColor,
     fontFamily: 'Helvetica',
@@ -63,13 +65,5 @@ ThemeData lightTheme = ThemeData(
     floatingActionButtonTheme:
         const FloatingActionButtonThemeData(backgroundColor: kprimaryColor));
 
-const Color kContainerBorderColorOrange = Color(0xffecb200);
-const Color kContainerBackgroundColorOrange = Color(0xfffff8e6);
-const Color kContainerBorderColorGreen = Color(0xff00901f);
-const Color kContainerBackgroundColorGreen = Color(0xffeefff4);
 
-const Color kprimaryColor = Color(0xff742ddd);
-
-const Color kTextHintTextColor = Color(0xffa7a6b3);
-const Color kTextGreyColor = Color(0xff777777);
 // const Color

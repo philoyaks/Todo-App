@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todoapp/bloc/todo_bloc.dart';
+import 'package:todoapp/data/repository.dart';
 import 'package:todoapp/widgets/todo_list_tile.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -14,6 +17,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     var _theme = Theme.of(context);
+    final bloc = BlocProvider.of<TodoBloc>(context);
+    Repository getIT = Repository();
 
     return Scaffold(
       appBar: AppBar(
@@ -28,7 +33,8 @@ class _HomeScreenState extends State<HomeScreen> {
             done: true,
             message: 'You are welcom',
             title: 'Bayo is good',
-          )
+          ),
+          ElevatedButton(onPressed: () async {}, child: const Text('sdfjfn'))
         ],
       ),
       floatingActionButton: FloatingActionButton(

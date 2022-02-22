@@ -53,7 +53,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     children: [
                       Column(
-                        children: state.unCompletedTask
+                        children: state.unCompletedTask.reversed
+                            .toList()
                             .asMap()
                             .map((i, e) => MapEntry(
                                 i,
@@ -63,7 +64,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             .toList(),
                       ),
                       Column(
-                        children: state.completedTask
+                        children: state.completedTask.reversed
+                            .toList()
                             .asMap()
                             .map((i, e) => MapEntry(
                                 i,

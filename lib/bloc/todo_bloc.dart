@@ -68,6 +68,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       TodoUpdateTaskEvent event, Emitter<TodoState> emit) async {
     emit(TodoLoading());
     await _repo.updateTask(task: event.task);
+    if(state is TodoGetAllTaskEvent)
 
     _nav.navigateTo(PageName.homeScreen);
   }

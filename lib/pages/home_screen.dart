@@ -37,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         automaticallyImplyLeading: false,
       ),
-      body: Container(
+      body: SizedBox(
         height: _size.height,
         width: _size.width,
         child: WillPopScope(

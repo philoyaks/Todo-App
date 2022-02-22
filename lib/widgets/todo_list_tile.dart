@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/src/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todoapp/bloc/todo_bloc.dart';
 import 'package:todoapp/constants/app_constants.dart';
 import 'package:todoapp/model/task.dart';
@@ -21,17 +21,28 @@ class TodoListTiles extends StatefulWidget {
 }
 
 class _TodoListTilesState extends State<TodoListTiles> {
+  bool loading = false;
+
+  @override
+  void didUpdateWidget(covariant TodoListTiles oldWidget) {
+    setState(() {
+      loading = false;
+    });
+    super.didUpdateWidget(oldWidget);
+  }
+
   @override
   Widget build(BuildContext context) {
     var _theme = Theme.of(context);
     var _size = MediaQuery.of(context).size;
+
     return Container(
       height: 44,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       child: Row(
         children: [
           widget.task.isCompleted
-              ? InkWell(
+              ? GestureDetector(
                   onTap: () {
                     context.read<TodoBloc>().add(TodoGetOnlyOneTaskEvent(
                           task: widget.task,
@@ -53,7 +64,7 @@ class _TodoListTilesState extends State<TodoListTiles> {
                         ),
                         child: Center(
                           child: Text(
-                            widget.number.toString(),
+                            widget.task.title[0].toUpperCase().toString(),
                             style: const TextStyle(
                                 color: kContainerBorderColorGreen,
                                 fontSize: 14),
@@ -88,7 +99,7 @@ class _TodoListTilesState extends State<TodoListTiles> {
                     ],
                   ),
                 )
-              : InkWell(
+              : GestureDetector(
                   onTap: () {
                     context.read<TodoBloc>().add(TodoGetOnlyOneTaskEvent(
                           task: widget.task,
@@ -152,36 +163,86 @@ class _TodoListTilesState extends State<TodoListTiles> {
                   ),
                 ),
           const Spacer(),
-          Container(
-            padding: const EdgeInsets.all(0),
-            margin: const EdgeInsets.all(0),
-            width: 24,
-            height: 24,
-            decoration: BoxDecoration(
-                color: const Color(0xfff2f2f2),
-                borderRadius: BorderRadius.circular(6)),
-            child: Transform.scale(
-              scale: 1.4,
-              child: Checkbox(
-                value: widget.task.isCompleted,
-                onChanged: (val) {
-                  context.read<TodoBloc>().add(TodoUpdateTaskEvent(
-                      task: widget.task
-                          .copyWith(isCompleted: !widget.task.isCompleted)));
+          loading
+              ? const MyBlinkingButton()
+              : Container(
+                  padding: const EdgeInsets.all(0),
+                  margin: const EdgeInsets.all(0),
+                  width: 24,
+                  height: 24,
+                  decoration: BoxDecoration(
+                      color: const Color(0xfff2f2f2),
+                      borderRadius: BorderRadius.circular(6)),
+                  child: Transform.scale(
+                    scale: 1.4,
+                    child: Checkbox(
+                      value: widget.task.isCompleted,
+                      onChanged: (val) async {
+                        setState(() {
+                          loading = true;
+                        });
+                        context.read<TodoBloc>().add(TodoCheckBoxUpdate(
+                            task: widget.task.copyWith(
+                                isCompleted: !widget.task.isCompleted)));
+                        await Future.delayed(const Duration(seconds: 15));
 
-                  // setState(() {
-                  //   widget.task.isCompleted = !widget.done;
-                  // });
-                },
-                activeColor: const Color(0xff00901f),
-                side: const BorderSide(width: 0.8, color: Color(0xffc4c4c4)),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6),
+                        if (mounted) {
+                          setState(() {
+                            loading = false;
+                          });
+                        }
+                      },
+                      activeColor: const Color(0xff00901f),
+                      side: const BorderSide(
+                          width: 0.8, color: Color(0xffc4c4c4)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
         ],
+      ),
+    );
+  }
+}
+
+class MyBlinkingButton extends StatefulWidget {
+  const MyBlinkingButton({Key? key}) : super(key: key);
+
+  @override
+  _MyBlinkingButtonState createState() => _MyBlinkingButtonState();
+}
+
+class _MyBlinkingButtonState extends State<MyBlinkingButton>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+
+  @override
+  void initState() {
+    _animationController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 1));
+    _animationController.repeat(reverse: true);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _animationController,
+      child: Container(
+        padding: const EdgeInsets.all(0),
+        margin: const EdgeInsets.all(0),
+        width: 24,
+        height: 24,
+        decoration: BoxDecoration(
+            color: kprimaryColor, borderRadius: BorderRadius.circular(6)),
       ),
     );
   }

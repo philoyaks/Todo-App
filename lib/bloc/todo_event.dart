@@ -14,13 +14,17 @@ class TodoGetOnlyOneTaskEvent extends TodoEvent {
 
   const TodoGetOnlyOneTaskEvent({required this.task});
   @override
-  // TODO: implement props
   List<Object> get props => [task];
 }
 
 class TodoUpdateTaskEvent extends TodoEvent {
   final Task task;
   const TodoUpdateTaskEvent({required this.task});
+}
+
+class TodoCheckBoxUpdate extends TodoEvent {
+  final Task task;
+  const TodoCheckBoxUpdate({required this.task});
 }
 
 class TodoDeleteTaskEvent extends TodoEvent {

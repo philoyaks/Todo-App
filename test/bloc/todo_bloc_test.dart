@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:todoapp/bloc/todo_bloc.dart';
 import 'package:todoapp/constants/app_constants.dart';
 import 'package:todoapp/data/Irepo.dart';
-import 'package:todoapp/data/mockrepository.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:todoapp/model/task.dart';
@@ -60,7 +59,7 @@ void main() {
       act: (bloc) => bloc.add(TodoGetAllTaskEvent()),
       expect: () => [
         TodoLoading(),
-        TodoLoadSucess(unCompletedTask: [], completedTask: tasks)
+        TodoLoadSucess(unCompletedTask: const [], completedTask: tasks)
       ],
     );
     blocTest<TodoBloc, TodoState>(

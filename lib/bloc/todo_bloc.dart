@@ -4,10 +4,8 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:todoapp/constants/app_constants.dart';
 import 'package:todoapp/data/Irepo.dart';
-import 'package:todoapp/data/repository.dart';
 import 'package:todoapp/model/task.dart';
 import 'package:todoapp/route.dart';
-import 'package:intl/intl.dart';
 
 part 'todo_event.dart';
 part 'todo_state.dart';
@@ -16,11 +14,12 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
   final IRepository _repo;
   final NavigationService _nav = locator<NavigationService>();
 
-  TodoBloc(this._repo) : super(TodoInitial()) {
+  TodoBloc(this._repo) : super(TodoLoading()) {
     on<TodoGetAllTaskEvent>(_getAllTask);
     on<TodoGetOnlyOneTaskEvent>(_getOneTask);
     on<TodoInsertTaskEvent>(_insertTask);
     on<TodoUpdateTaskEvent>(_updateTask);
+    on<TodoCheckBoxUpdate>(_updateCheckbox);
     on<TodoDeleteTaskEvent>(_deleteTask);
     // on<TodoLoading>((event, emit) => null);
   }
@@ -56,13 +55,9 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       TodoInsertTaskEvent event, Emitter<TodoState> emit) async {
     try {
       emit(TodoLoading());
-      final repo = await _repo.insertTask(
+      await _repo.insertTask(
           description: event.description, title: event.title);
-      // if (repo.id.isEmpty) {
-      //   emit(TodoInitial());
-      // } else {
-      //   emit(TodoLoadSucess(result: result));
-      // }
+
       _nav.navigateTo(PageName.homeScreen);
     } catch (e) {
       TodoLoadFailure();
@@ -71,18 +66,14 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
 
   FutureOr<void> _updateTask(
       TodoUpdateTaskEvent event, Emitter<TodoState> emit) async {
-<<<<<<< HEAD
-    emit(TodoLoading());
-    await _repo.updateTask(task: event.task);
-    if(state is TodoGetAllTaskEvent)
-=======
     try {
       emit(TodoLoading());
       await _repo.updateTask(task: event.task);
->>>>>>> 35ecf3eaf8918a7377aa5492b16aea9941c4e7d6
 
       _nav.navigateTo(PageName.homeScreen);
-    } catch (e) {}
+    } catch (e) {
+      emit(TodoLoadFailure());
+    }
   }
 
   FutureOr<void> _deleteTask(
@@ -91,6 +82,27 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       emit(TodoLoading());
       await _repo.deleteTask(id: event.id);
       _nav.navigateTo(PageName.homeScreen);
-    } catch (e) {}
+    } catch (e) {
+      TodoLoadFailure();
+    }
+  }
+
+  FutureOr<void> _updateCheckbox(
+      TodoCheckBoxUpdate event, Emitter<TodoState> emit) async {
+    await _repo.updateTask(task: event.task);
+    final result = await _repo.getAllTask();
+    var unCompletedTask =
+        result.where((element) => element.isCompleted == false).toList();
+    unCompletedTask.sort((a, b) => a.updatedAt.compareTo(b.updatedAt));
+
+    var completedTask =
+        result.where((element) => element.isCompleted == true).toList();
+    completedTask.sort((a, b) => a.updatedAt.compareTo(b.updatedAt));
+    if (result.isEmpty) {
+      emit(TodoInitial());
+    } else {
+      emit(TodoLoadSucess(
+          completedTask: completedTask, unCompletedTask: unCompletedTask));
+    }
   }
 }

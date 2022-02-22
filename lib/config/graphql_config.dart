@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:todoapp/config/graphql_endpoints.dart';
 
 const endpointURl = """
 https://todolistassessment.hasura.app/v1/graphql""";
@@ -28,7 +27,6 @@ class GraphqlConfigs {
         fetchPolicy: FetchPolicy.cacheAndNetwork));
 
     if (result.hasException) {
-      print(result.exception);
       if (result.exception!.graphqlErrors.isEmpty) {
         print("Internet is not found");
       } else {
@@ -56,7 +54,6 @@ class GraphqlConfigs {
         print(result.exception!.graphqlErrors[0].message.toString());
       }
     } else {
-      print("Task was successfully added");
       return result.data;
     }
   }

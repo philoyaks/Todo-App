@@ -5,7 +5,7 @@ import '../route.dart';
 
 GetIt locator = GetIt.instance;
 void setupLocator() {
-  locator.registerLazySingleton(() => NavigationService());
+  locator.registerLazySingleton<NavigationService>(() => NavigationService());
 }
 
 class PageName {

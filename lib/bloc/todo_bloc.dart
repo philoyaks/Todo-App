@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:todoapp/constants/app_constants.dart';
+import 'package:todoapp/data/Irepo.dart';
 import 'package:todoapp/data/repository.dart';
 import 'package:todoapp/model/task.dart';
 import 'package:todoapp/route.dart';
@@ -12,10 +13,10 @@ part 'todo_event.dart';
 part 'todo_state.dart';
 
 class TodoBloc extends Bloc<TodoEvent, TodoState> {
-  final Repository _repo = Repository();
+  final IRepository _repo;
   final NavigationService _nav = locator<NavigationService>();
 
-  TodoBloc() : super(TodoInitial()) {
+  TodoBloc(this._repo) : super(TodoInitial()) {
     on<TodoGetAllTaskEvent>(_getAllTask);
     on<TodoGetOnlyOneTaskEvent>(_getOneTask);
     on<TodoInsertTaskEvent>(_insertTask);
@@ -53,30 +54,43 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
 
   Future<FutureOr<void>> _insertTask(
       TodoInsertTaskEvent event, Emitter<TodoState> emit) async {
-    emit(TodoLoading());
-    final repo = await _repo.insertTask(
-        description: event.description, title: event.title);
-    // if (repo.id.isEmpty) {
-    //   emit(TodoInitial());
-    // } else {
-    //   emit(TodoLoadSucess(result: result));
-    // }
-    _nav.navigateTo(PageName.homeScreen);
+    try {
+      emit(TodoLoading());
+      final repo = await _repo.insertTask(
+          description: event.description, title: event.title);
+      // if (repo.id.isEmpty) {
+      //   emit(TodoInitial());
+      // } else {
+      //   emit(TodoLoadSucess(result: result));
+      // }
+      _nav.navigateTo(PageName.homeScreen);
+    } catch (e) {
+      TodoLoadFailure();
+    }
   }
 
   FutureOr<void> _updateTask(
       TodoUpdateTaskEvent event, Emitter<TodoState> emit) async {
+<<<<<<< HEAD
     emit(TodoLoading());
     await _repo.updateTask(task: event.task);
     if(state is TodoGetAllTaskEvent)
+=======
+    try {
+      emit(TodoLoading());
+      await _repo.updateTask(task: event.task);
+>>>>>>> 35ecf3eaf8918a7377aa5492b16aea9941c4e7d6
 
-    _nav.navigateTo(PageName.homeScreen);
+      _nav.navigateTo(PageName.homeScreen);
+    } catch (e) {}
   }
 
   FutureOr<void> _deleteTask(
       TodoDeleteTaskEvent event, Emitter<TodoState> emit) async {
-    emit(TodoLoading());
-    await _repo.deleteTask(id: event.id);
-    _nav.navigateTo(PageName.homeScreen);
+    try {
+      emit(TodoLoading());
+      await _repo.deleteTask(id: event.id);
+      _nav.navigateTo(PageName.homeScreen);
+    } catch (e) {}
   }
 }

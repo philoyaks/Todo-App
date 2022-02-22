@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:todoapp/constants/app_constants.dart';
+import 'package:todoapp/data/Irepo.dart';
 import 'package:todoapp/data/repository.dart';
 import 'package:todoapp/model/task.dart';
 import 'package:todoapp/route.dart';
@@ -12,10 +13,10 @@ part 'todo_event.dart';
 part 'todo_state.dart';
 
 class TodoBloc extends Bloc<TodoEvent, TodoState> {
-  final Repository _repo = Repository();
+  final IRepository _repo;
   final NavigationService _nav = locator<NavigationService>();
 
-  TodoBloc() : super(TodoInitial()) {
+  TodoBloc(this._repo) : super(TodoInitial()) {
     on<TodoGetAllTaskEvent>(_getAllTask);
     on<TodoGetOnlyOneTaskEvent>(_getOneTask);
     on<TodoInsertTaskEvent>(_insertTask);

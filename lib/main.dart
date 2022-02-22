@@ -7,6 +7,7 @@ import 'package:todoapp/pages/home_screen.dart';
 import 'package:todoapp/route.dart';
 
 import 'constants/app_constants.dart';
+import 'data/repository.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,7 +15,7 @@ void main() async {
   await initHiveForFlutter();
 
   runApp(BlocProvider(
-    create: (context) => TodoBloc(),
+    create: (context) => TodoBloc(Repository()),
     child: const MyApp(),
   ));
 }

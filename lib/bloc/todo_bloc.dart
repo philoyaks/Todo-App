@@ -54,29 +54,37 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
 
   Future<FutureOr<void>> _insertTask(
       TodoInsertTaskEvent event, Emitter<TodoState> emit) async {
-    emit(TodoLoading());
-    final repo = await _repo.insertTask(
-        description: event.description, title: event.title);
-    // if (repo.id.isEmpty) {
-    //   emit(TodoInitial());
-    // } else {
-    //   emit(TodoLoadSucess(result: result));
-    // }
-    _nav.navigateTo(PageName.homeScreen);
+    try {
+      emit(TodoLoading());
+      final repo = await _repo.insertTask(
+          description: event.description, title: event.title);
+      // if (repo.id.isEmpty) {
+      //   emit(TodoInitial());
+      // } else {
+      //   emit(TodoLoadSucess(result: result));
+      // }
+      _nav.navigateTo(PageName.homeScreen);
+    } catch (e) {
+      TodoLoadFailure();
+    }
   }
 
   FutureOr<void> _updateTask(
       TodoUpdateTaskEvent event, Emitter<TodoState> emit) async {
-    emit(TodoLoading());
-    await _repo.updateTask(task: event.task);
+    try {
+      emit(TodoLoading());
+      await _repo.updateTask(task: event.task);
 
-    _nav.navigateTo(PageName.homeScreen);
+      _nav.navigateTo(PageName.homeScreen);
+    } catch (e) {}
   }
 
   FutureOr<void> _deleteTask(
       TodoDeleteTaskEvent event, Emitter<TodoState> emit) async {
-    emit(TodoLoading());
-    await _repo.deleteTask(id: event.id);
-    _nav.navigateTo(PageName.homeScreen);
+    try {
+      emit(TodoLoading());
+      await _repo.deleteTask(id: event.id);
+      _nav.navigateTo(PageName.homeScreen);
+    } catch (e) {}
   }
 }

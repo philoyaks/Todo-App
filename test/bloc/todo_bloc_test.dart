@@ -51,8 +51,7 @@ void main() {
     });
 
     blocTest<TodoBloc, TodoState>(
-      'emits [TaskLoadInProgress, TaskLoadSuccess] states for'
-      'successful task loads',
+      'Gwt All Task',
       build: () {
         when(() => mockTaskRepository!.getAllTask())
             .thenAnswer((_) async => tasks);
@@ -80,19 +79,11 @@ void main() {
       build: () {
         when(() => mockTaskRepository!.insertTask(description: '', title: 'sd'))
             .thenAnswer((_) async => tasks[0]);
-        // Task(
-        //     createdAt: '',
-        //     description: '',
-        //     developerId: '',
-        //     id: '6',
-        //     isCompleted: true,
-        //     title: 'sd',
-        //     updatedAt: ''));
         return todoBloc;
       },
       act: (bloc) =>
           bloc.add(const TodoInsertTaskEvent(description: '', title: '')),
-      expect: () => [Null],
+      expect: () => [TodoLoading()],
     );
     blocTest<TodoBloc, TodoState>(
       'Update Task',
@@ -104,6 +95,7 @@ void main() {
       act: (bloc) => bloc.add(TodoUpdateTaskEvent(task: tasks[0])),
       expect: () => [TodoLoading()],
     );
+
     blocTest<TodoBloc, TodoState>(
       'Delete Task',
       build: () {

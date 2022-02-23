@@ -42,10 +42,19 @@ void main() {
     });
 
     test('Insert Task', () async {
-      when(repo.insertTask(description: any, title: 'snfl')).thenAnswer(
+      when(repo.insertTask(description: 'Good', title: 'How')).thenAnswer(
           (_) async => tasks[0].copyWith(description: 'Good', title: 'snfl'));
-      expect(await repo.insertTask(),
-          tasks[0].copyWith(description: '', title: 'name'));
+      expect(await repo.insertTask(description: 'Good', title: 'How'),
+          tasks[0].copyWith(description: 'Good', title: 'snfl'));
+    });
+
+    test('Update Task', () async {
+      when(repo.updateTask(task: tasks[0])).thenAnswer((_) async => tasks[0]);
+      expect(await repo.updateTask(task: tasks[0]), tasks[0]);
+    });
+    test('Delete Task', () async {
+      when(repo.deleteTask(id: tasks[0].id)).thenAnswer((_) async => tasks[0]);
+      expect(await repo.deleteTask(id: tasks[0].id), tasks[0]);
     });
   });
 }

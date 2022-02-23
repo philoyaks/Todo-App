@@ -92,7 +92,7 @@ void main() {
         return todoBloc;
       },
       act: (bloc) => bloc.add(TodoUpdateTaskEvent(task: tasks[0])),
-      expect: () => [TodoLoading()],
+      expect: () => [TodoLoading(), TodoLoadFailure()],
     );
 
     blocTest<TodoBloc, TodoState>(

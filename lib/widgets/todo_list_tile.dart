@@ -49,7 +49,6 @@ class _TodoListTilesState extends State<TodoListTiles> {
                         ));
                   },
                   child: Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
                         width: 44,
@@ -164,7 +163,7 @@ class _TodoListTilesState extends State<TodoListTiles> {
                 ),
           const Spacer(),
           loading
-              ? const MyBlinkingButton()
+              ? const BlinkingProgressIndicator()
               : Container(
                   padding: const EdgeInsets.all(0),
                   margin: const EdgeInsets.all(0),
@@ -207,14 +206,16 @@ class _TodoListTilesState extends State<TodoListTiles> {
   }
 }
 
-class MyBlinkingButton extends StatefulWidget {
-  const MyBlinkingButton({Key? key}) : super(key: key);
+//BLinlinking Progress indication custom made
+class BlinkingProgressIndicator extends StatefulWidget {
+  const BlinkingProgressIndicator({Key? key}) : super(key: key);
 
   @override
-  _MyBlinkingButtonState createState() => _MyBlinkingButtonState();
+  _BlinkingProgressIndicatorState createState() =>
+      _BlinkingProgressIndicatorState();
 }
 
-class _MyBlinkingButtonState extends State<MyBlinkingButton>
+class _BlinkingProgressIndicatorState extends State<BlinkingProgressIndicator>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
 

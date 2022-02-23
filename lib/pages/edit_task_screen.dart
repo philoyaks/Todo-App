@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:todoapp/bloc/todo_bloc.dart';
 import 'package:todoapp/constants/app_constants.dart';
 import 'package:todoapp/model/task.dart';
-import 'package:todoapp/route.dart';
+import 'package:todoapp/config/route.dart';
 
 class EditTaskScreen extends StatefulWidget {
   final Task task;

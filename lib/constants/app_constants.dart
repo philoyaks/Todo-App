@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
-import '../route.dart';
+import '../config/route.dart';
 
+// Allows me to navigate from my Bloc functions without the context
 GetIt locator = GetIt.instance;
 void setupLocator() {
   locator.registerLazySingleton<NavigationService>(() => NavigationService());
@@ -11,7 +12,6 @@ void setupLocator() {
 class PageName {
   static const String createTaskScreen = 'createTaskScreen';
   static const String editTaskScreen = 'editTaskScreen';
-
   static const String homeScreen = 'Homescreen';
 }
 
@@ -22,6 +22,6 @@ const Color kContainerBorderColorGreen = Color(0xff00901f);
 const Color kContainerBackgroundColorGreen = Color(0xffeefff4);
 
 const Color kprimaryColor = Color(0xff742ddd);
-
+//Some TextColor used alot
 const Color kTextHintTextColor = Color(0xffa7a6b3);
 const Color kTextGreyColor = Color(0xff777777);

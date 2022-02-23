@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:todoapp/bloc/todo_bloc.dart';
 import 'package:todoapp/constants/app_constants.dart';
-import 'package:todoapp/route.dart';
+import 'package:todoapp/config/route.dart';
 
 class CreateTaskScreen extends StatefulWidget {
   final bool createTask;

@@ -4,7 +4,7 @@ import 'package:todoapp/bloc/todo_bloc.dart';
 import 'package:todoapp/constants/app_constants.dart';
 import 'package:todoapp/widgets/todo_list_tile.dart';
 
-import '../route.dart';
+import '../config/route.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);

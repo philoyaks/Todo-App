@@ -5,7 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:todoapp/constants/app_constants.dart';
 import 'package:todoapp/data/Irepo.dart';
 import 'package:todoapp/model/task.dart';
-import 'package:todoapp/route.dart';
+import 'package:todoapp/config/route.dart';
 
 part 'todo_event.dart';
 part 'todo_state.dart';

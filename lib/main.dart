@@ -4,7 +4,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:todoapp/bloc/todo_bloc.dart';
 import 'package:todoapp/constants/app_theme.dart';
 import 'package:todoapp/pages/home_screen.dart';
-import 'package:todoapp/route.dart';
+import 'package:todoapp/config/route.dart';
 
 import 'constants/app_constants.dart';
 import 'data/repository.dart';
